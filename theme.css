@@ -1,0 +1,140 @@
+body{
+	background-color: #f3f3f3;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+.centerHor{
+    margin: 0 auto;
+}
+
+.btnPosition{
+	position:absolute;
+	right:3rem;
+}
+
+.searchheight{
+    height: 8rem;
+}
+
+.searchInput{
+    border-right:none;
+    width:200px;
+}
+
+.schPosition{
+    position:absolute;
+    top:.5rem;
+    background-color: white;
+}
+
+.postBtnPosition{
+    align-self: flex-end;
+}
+
+.theme-red{
+	background-color:#ff3131;
+}
+
+.minwidth{
+	min-width:900px;
+}
+
+.borderWhite{
+    border:1px solid white;
+}
+
+.slideInfoPosition{
+    left:4rem;
+    bottom:2rem;
+}
+
+.scoreBoard{
+    border:1px solid white;
+    right:5rem; bottom:2rem;
+    background-color:#ffffff24;
+}
+
+.smallText{
+	font-size:0.8rem;
+}
+
+.lowLineHeight{
+	line-height:20px;
+}
+
+.starRating{
+    letter-spacing: 1px;
+    color:white;
+}
+
+.whiteBG{
+	border-top:1px solid white;
+	background-color: white;
+}
+
+.menu-underline{
+	color:#ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+.menu-tabs .active{
+	color:#ff3131;
+	font-weight: bold;
+	border-bottom: 3px solid #ff3131;
+    box-sizing:content-box;
+}
+
+.cardWth{
+	width:220px;
+}
+.card-body{
+	height:6rem;
+	padding:10px;
+}
+
+.cardPosition{
+    position:inline-block;
+}
+
+.iconSize{
+    width:100px;
+}
+
+.userCardWth{
+    width:160px;
+}
+
+.spacedText{
+	letter-spacing: 1px;
+}
+
+.textPositionLB{
+	position: absolute;
+    left:10px;
+    bottom:10px;
+}
+.textPositionRB{
+    position: absolute;
+    right:10px;
+    bottom:10px;
+}
+.textPositionRT{
+    position: absolute;
+    right:10px;
+    top:10px;
+}
+
+.scorePosition{
+	position: absolute;
+    right:10px;
+    bottom:10px;
+}
+
+.containerShadow{
+    box-shadow:1px 1px 3px 1px #aaa;
+}
+
+.tableSize{
+    width:280px;
+    height:220px;
+}

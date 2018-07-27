@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/rating/theme.css">
+
+    <title>Game Info - {{gameX.gameName}}</title>
+  </head>
+  <body class="whiteBG">
+
+<!-- nav bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark theme-red minwidth">
+      <a class="navbar-brand ml-5" href="/rating/">AtypicalGamers</a>
+
+      <div class="container justify-content-center">
+        <form class="form-inline schPosition">
+          <input class="form-control borderWhite rounded-0 searchInput" id="search_input" type="search" placeholder="Search..." aria-label="Search">
+          <button class="btn borderWhite rounded-0 text-white theme-red" id="search_submit" type="submit"><i class="fas fa-search"></i></button>
+          </form>
+      </div>
+
+      <button class="navbar-toggler btnPosition" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mr-5">
+          <li class="nav-item active">
+            <a class="nav-link text-white" href="#">Game <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">Ranking</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">Comment</a>
+          </li>
+          <li class="nav-item ml-3">
+            <a class="nav-link text-white" href="#"><i class="fas fa-user"></i></a>
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+
+<!-- video -->
+
+    <div class="container-fluid minwidth px-0 containerShadow">
+      <div class="row">
+
+        <div class="col-8 inline-block">
+          <iframe width="100%" height="450" src="{{gameX.video_url}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+        </div>
+        <div class="col-4 inline-block">
+          <div class="pt-5 px-3">
+            <h2>{{gameX.gameName}}</h2>
+            <p>
+              {% set i=(gameX.totalScore/gameX.ratingCount) | number_format(1, '.', ',') %}
+              {% set stars=i/2 %}
+              {% for star in 0..stars %}
+                {% if stars-star>=1 %}
+                <i class="fas fa-star"></i> 
+                {% elseif stars-star>0.75 %}
+                <i class="fas fa-star"></i> 
+                {% elseif 0.25<=(stars-star)<=0.75 %}
+                <i class="fas fa-star-half-alt"></i> 
+                {% endif %}
+              {% endfor %}
+              <a class="p-1 inline-block rounded spacedText text-white ml-3 theme-red">{{(gameX.totalScore/gameX.ratingCount) | number_format(1, '.', ',') }}</a>
+            </p>
+            <table class="tableSize">
+              <tbody>
+                <tr>
+                  <td>Developer(s):</td>
+                  <td>{{gameX.developer}}</td>
+                </tr>
+                <tr>
+                  <td>Publisher(s):</td>
+                  <td>{{gameX.publisher}}</td>
+                </tr>
+                <tr>
+                  <td>Producer(s):</td>
+                  <td>{{gameX.producer}}</td>
+                </tr>
+                <tr>
+                  <td>Platform(s):</td>
+                  <td>
+
+                    {% set platforms = gameX.platform | split(',') %}
+                    {% for plat in platforms %}
+                      <a href="/rating/platform/get/{{plat}}">{{plat}}  </a>
+                    {% endfor %}
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>Release:</td>
+                  <td>{{gameX.releaseDate}}</td>
+                </tr>
+                <tr>
+                  <td>Genre(s):</td>
+                  <td>{{gameX.genre}}</td>
+                </tr>
+                <tr>
+                  <td>Mode(s):</td>
+                  <td>{{gameX.mode}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+<!-- tabs -->
+    <div class="container-fluid minwidth">
+
+      <div class="row my-5 mx-4 menu-tabs ">
+        <div class="col-12">
+          <div class="container-fluid">
+            <div class="row text-secodary menu-underline">
+
+              <div class="col-1 mr-5 active">
+                Gameplay
+              </div>
+              <div class="col-1 mr-5">
+                Reviews
+              </div>
+              <div class="col-1">
+                Related
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row my-5 px-5">
+
+          {{gameX.gameplay}}
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="container-fluid minwidth">
+
+      <div class="row my-5 mx-4 menu-tabs">
+        <div class="col-12">
+          <div class="container-fluid">
+            <div class="row text-secodary menu-underline">
+
+              <a class="col-1 mr-5 active" href="#">
+                Reviews
+              </a>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="form-inline my-3 ml-5">
+
+          <div class="userCardWth cardPosition">
+            <div class="card borderWhite">
+              <img class="iconSize centerHor" src="/rating/img/Guest-icon.png" alt="Card image cap">
+              <div class="lowLineHeight text-center">
+                <h5 class="text-dark">Guest</h5>
+<!--           if login    <p><i class="far fa-heart"></i> Likes <i class="far fa-envelope"></i> = 0</p> -->
+<!--                 <a class="smallText textPositionLB">Sign In</a><a class="smallText textPositionRB">Register</a> -->
+              </div>
+            </div>
+          </div>
+          <textarea id="review-input" class="form-control shadow-sm" style="width:550px" rows="5"></textarea>
+          <button id="review-submit" class="btn btn-primary postBtnPosition ml-3 shadow-sm" data-id="{{gameX.idgameInfo}}">Post review</button>
+        </div>
+      </div>
+
+      {% for review in reviews %}
+      <div class="row">
+        <div class="form-inline my-3 ml-5 col-12">
+          <div class="userCardWth cardPosition">
+            <div class="card borderWhite">
+              <img class="iconSize centerHor" src="/rating/img/Guest-icon.png" alt="Card image cap">
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="card-body">
+              <h5 class="card-title">{{review.userId}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted smallText">{{review.postTime}}</h6>
+              <p class="card-text">{{review.reviewContent}}</p>
+              <span class="text-muted smallText">Was this review helpful?</span>
+              <button type="button" class="btn btn-primary btn-sm"><i class="far fa-thumbs-up"></i></button><span class="text-muted smallText"> {{review.like}}</span>
+              <button type="button" class="btn btn-danger btn-sm"><i class="far fa-thumbs-down"></i></button><span class="text-muted smallText"> {{review.dislike}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+      $('#review-submit').on('click',function(){
+
+
+
+      $('#review-submit').on('click',function(){
+        var g_id = $(this).data('id');
+        var u_id = "Wei";
+        var content = $('#review-input').val();
+        $.post(
+          '/rating/review/submit/1',
+          {
+            "gid": g_id,
+            "uid": u_id,
+            "content": content
+          },
+          function(data){
+            if (data.code==200){
+              $('#result-info').html(
+                `<div class="alert alert-primary" role="alert">\n` +
+                data.message +
+                `</div>`
+              );
+              $('#all-reviews').prepend(
+                `<div class="row">
+                  <div class="form-inline my-3 ml-5 col-12">
+                    <div class="userCardWth cardPosition">
+                      <div class="card borderWhite">
+                        <img class="iconSize centerHor" src="/rating/img/Guest-icon.png" alt="Card image cap">
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="card-body">
+                        <h5 class="card-title"> Me </h5>
+                        <h6 class="card-subtitle mb-2 text-muted smallText">Just now</h6>
+                        <p class="card-text">`+ content + `</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>`
+
+                );
+            }else{
+              $('#result-info').html(
+                '<div class="alert alert-warning" role="alert">\n' +
+                data.message +
+                '</div>'
+              );
+              
+            }
+          },
+          "json"
+        );
+      });
+    </script>
+
+  </body>
+</html>
