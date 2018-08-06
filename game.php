@@ -14,7 +14,6 @@ class game{
 	}
 
 	public function infoMethod($id){
-		// print_r('my user id in session is :' . $_SESSION['ID'] );
 		$gameX=$this->conn->getGameById($id);
 		$reviews=$this->conn->getReviewById($id);
 

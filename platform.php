@@ -26,8 +26,8 @@ class platform{
 				'index.html.twig', 
 				array(
 					'games'=>$gameData,
-					// 'names'=>$platNames,
-					'platNames'=>$new_platform
+					'platNames'=>$new_platform,
+					'currentPlat' => $pid
 				)
 			);
 		}catch(Exception $e){

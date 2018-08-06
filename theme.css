@@ -43,6 +43,10 @@ body{
     border:1px solid white;
 }
 
+.borderRed{
+    border:1px solid #ff3131;
+}
+
 .slideInfoPosition{
     left:4rem;
     bottom:2rem;
@@ -137,4 +141,8 @@ body{
 .tableSize{
     width:280px;
     height:220px;
+}
+
+.footerSize{
+    height:10rem;
 }

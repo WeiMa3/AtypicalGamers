@@ -36,17 +36,6 @@ class dbConnection{
 		return $result;
 	}
 
-	public function getSlides(){
-		$stmt=$this->getConnInstant()->prepare('SELECT * FROM gameInfo WHERE idGameInfo<4');
-		$stmt->execute(
-			array(
-				':pid'=>'%'.$pid.'%'
-			)
-		);
-		$result=$stmt->fetchAll(PDO::FETCH_ASSOC);
-		return $result;
-	}
-
 
 	public function getGameById($id){
 		$stmt=$this->getConnInstant()->prepare('SELECT * FROM gameInfo WHERE idgameInfo=:id');
@@ -70,35 +59,55 @@ class dbConnection{
 		return $result;
 	}
 
-	// public function getUserInfo($id){
-	// 	$stmt=$this->getConnInstant()->prepare('SELECT * FROM userInfo WHERE idUser =:id');
-	// 	$stmt->execute(
-	// 			array(
-	// 				':id'=>$id
-	// 			)
-	// 		);
-	// 	$result=$stmt->fetch();
-	// 	return $result;
-	// }
+
+	public function signIn($uName, $PW){
+		$stmt=$this->getConnInstant()->prepare('SELECT * FROM userInfo WHERE userName =:uName AND userPW =:PW');
+		$stmt->execute(
+				array(
+					':uName'=>$uName,
+					':PW'=>$PW
+				)
+			);
+		$result=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
+
+	public function getUserInfo($id){
+		$stmt=$this->getConnInstant()->prepare('SELECT * FROM userInfo WHERE idUser =:id');
+		$stmt->execute(
+				array(
+					':id'=>$id
+				)
+			);
+		$result=$stmt->fetch();
+		return $result;
+	}
 
 	public function insertReview($gid,$uid,$content){
-		$stmt=$this->getConnInstant()->prepare('INSERT INTO review(gameId, userId, postTime,reviewContent) VALUES (:gid, :uid, :date, :content)');
+		$stmt=$this->getConnInstant()->prepare('INSERT INTO review(gameId, userId, postTime, reviewContent, likeCount, dislikeCount) VALUES (:gid, :uid, :date, :content, 0, 0)');
 		$result = $stmt->execute(
 			array(
 				':gid'=>$gid,
 				':uid'=>$uid,
 				':date'=> date('Y-m-d h:i:s'),
-				':content'=>$content
+				':content'=>$content,
 			)
 		);
 		return $result;
 	}
 
+	public function reviewLikes($rid,$uid,$action){
+
+
+	}
+
+
 	public function getGameBySearch($input){
 		$stmt=$this->getConnInstant()->prepare('SELECT * FROM gameInfo WHERE gameName LIKE :input');
-		$result = $stmt->execute(
+		$stmt->execute(
 			array(
-				':input'=>'%'.$input.'%'
+				':input' => '%'.$input.'%'
 			)
 		);
 		$result=$stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -113,7 +122,8 @@ class dbConnection{
 // test
 
 // $db=new dbConnection();
-// var_dump($db->getGameBySearch('zelda'));
+// var_dump($db->signIn('Mario', 'password2'));
+
 
 
 

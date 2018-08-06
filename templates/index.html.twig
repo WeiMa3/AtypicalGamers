@@ -33,20 +33,53 @@
 	        <a class="nav-link text-white" href="#">Comment</a>
 	      </li>
 	      <li class="nav-item ml-3">
-	        <a class="nav-link text-white" href="#"><i class="fas fa-user"></i></a>
+            <button class="nav-link theme-red text-white borderRed" style="border:1px solid #ff3131" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user"></i></button>
 	      </li>
 	    </ul>
 	  </div>
 	</nav>
 
+<!-- modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sign in</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">User ID:</label>
+                <input type="text" class="form-control" id="userId">
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Password:</label>
+                <input type="text" class="form-control" id="password">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="textPositionLB">
+              <p class="smallText">Don't have an account?</p>
+              <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Sign up</button>
+            </div>
+            <button type="button" class="btn btn-primary">Sign In</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 <!-- search -->
 	<div class="container d-flex justify-content-center minwidth searchheight">
-	  <form class="form-inline my-2 my-lg-0">
-		<input class="form-control rounded-0 searchInput" id="search_input" type="search" placeholder="Search..." aria-label="Search">
-		<button class="btn my-2 my-sm-0 rounded-0 text-white theme-red" id="search_submit" type="submit"><i class="fas fa-search"></i></button>
+	  <form action="/rating/search/result/1" class="form-inline my-2 my-lg-0" method="POST">
+		<input class="form-control rounded-0 searchInput" name="keyword" id="search_input" type="search" placeholder="Search..." aria-label="Search">
+		<button class="btn my-sm-0 rounded-0 text-white theme-red" id="search_submit" type="submit"><i class="fas fa-search"></i></button>
    	  </form>
 	</div>
-
 <!-- banner slides -->
 
 	<div id="carouselExampleControls" class="carousel slide minwidth" data-ride="carousel">
@@ -54,11 +87,8 @@
 
 		{% for game in games %}
 			{% if game.slide_url %}
-				{% if game.idgameInfo==1 %}
-				    <div class="carousel-item active">
-				{% else %}
-					<div class="carousel-item">
-				{% endif %}
+				
+				    <div class="carousel-item {% if game.idgameInfo==1 %}active{% endif %}">
 						<div class="container-fluid p-0 position-relative">
 							<img src="{{game.slide_url}}" class="w-100">
 							<div class="position-absolute slideInfoPosition">
@@ -80,7 +110,7 @@
 										<i class="fas fa-star"></i> 
 										{% elseif stars-star>0.75 %}
 										<i class="fas fa-star"></i> 
-										{% elseif 0.25<=(stars-star)<=0.75 %}
+										{% elseif (stars-star)>=0.25 and (stars-star)<=0.75 %}
 										<i class="fas fa-star-half-alt"></i> 
 										{% endif %}
 									{% endfor %}
@@ -90,26 +120,6 @@
 				    </div>
 		    {% endif %}
 	    {% endfor %}
-<!-- 
-	    <div class="carousel-item">
-			<div class="container-fluid p-0 position-relative">
-				<img src="/rating/img/colossus_L.jpg" class="w-100">
-				<div class="position-absolute slideInfoPosition">
-					<h3 class="text-white">Shadow of the Colossus</h3>
-					<p class="text-white smallText"><span class="mr-2">Action Adventure Single-player</span> | <span class="ml-2">Platform(s): PlayStation 4</span></p>
-					<button class="btn theme-red text-white">View Info</button>
-				</div>
-
-				<div class="position-absolute p-2 rounded scoreBoard">
-					<p class="my-2">
-						<span class="text-white">Rating</span>
-						<span class="text-white ml-2 smallText"> based on 1149 reviews</span>
-					</p>
-					<p class="starRating"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star-half-alt"></i> 9.3</p>
-				</div>
-			</div>
-	    </div>
- -->
 
 	  </div>
 	  <a style="width:5%" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -131,12 +141,12 @@
 		  <div class="container-fluid">
 			<div class="nav nav-tabs row text-secodary menu-underline">
 
-				<a class="col-1 mr-4 active" href="/rating">
+				<a class="col-1 mr-4 {% if not currentPlat is defined %}active{%else%}text-dark{% endif %}" href="/rating">
 					AllGames
 				</a>
 
 				{% for platName in platNames %}
-				<a class="col-1 text-dark" href="/rating/platform/get/{{platName}}">
+				<a class="col-1 {% if currentPlat is defined and currentPlat==platName %}active{%else%}text-dark{% endif %}" href="/rating/platform/get/{{platName}}">
 					{{platName}}
 				</a>
 				{% endfor %}
@@ -159,12 +169,9 @@
 						<p class="text-dark">{{game.gameName}}</p>
 						<span class="text-secondary smallText textPositionLB mr-2">
 						{% set platforms = game.platform | split(',') %}
-<!-- 						{% set temp = [] %} -->
 						{% for plat in platforms %}
 							<a href="/rating/platform/get/{{plat}}">{{plat}}  </a>
-<!-- 							{% set temp = temp|merge([platNames[plat]]) %} -->
 						{% endfor %}
-<!-- 						{{temp | join(' | ')}} -->
 						</span>
 						<span class="p-1 rounded spacedText scorePosition text-white theme-red">{{(game.totalScore/game.ratingCount) | number_format(1, '.', ',') }}</span>
 					</div>
@@ -177,6 +184,15 @@
 
 	</div>
 
+	<!-- footer -->
+	<div class="container-fluid minwidth theme-red footerSize">
+		<div class="row col-12 container d-flex justify-content-center">
+			<div class="col-4"></div>
+			<div class="col-4"><h3 class="my-5 text-center text-white">AtypicalGamers</h1></div>
+			<div class="col-4"></div>
+			</div>
+		</div>
+	</div>
 
 
     <!-- Optional JavaScript -->

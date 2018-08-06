@@ -12,11 +12,13 @@ $twig = new Twig_Environment($loader
 
 $db_conn=new dbConnection();
 
-// $uid = 2;
 
+// $uid = $db_conn->signIn();
 // session_start();
-
 // $_SESSION['ID'] = $uid;
+
+// print_r('my user id in session is :' . $_SESSION['ID'] );
+
 
 if($_GET){
 
@@ -31,7 +33,7 @@ if($_GET){
 
 	if (array_key_exists(1, $p_array) && array_key_exists(2, $p_array) && !$p_array[2]==''){
 		$method=$p_array[1].'Method';//=infoMethod
-		$p_0 -> $method($p_array[2]);//game/info/ 似乎这时$p_array[2]=''
+		$p_0 -> $method($p_array[2]);//game/info/ $p_array[2]=''
 	}else{
 		$method='defaultMethod';
 		$p_0 -> $method();
@@ -57,7 +59,6 @@ try{
 		'index.html.twig', 
 		array(
 			'games'=>$gameData,
-			// 'names'=>$platNames,
 			'platNames'=>$new_platform,
 		)
 	);

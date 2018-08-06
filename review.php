@@ -9,7 +9,7 @@ class review {
 		$this->twig=$twig;
 	}
 
-	public function submitMethod($sth=0){
+	public function submitMethod($sth=1){
 
 		$gid=$_POST['gid'];
 		$uid=$_POST['uid'];
@@ -38,15 +38,6 @@ class review {
 
 
 }
-
-
-
-
-
-
-
-
-
 
 
 

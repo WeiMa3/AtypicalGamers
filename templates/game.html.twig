@@ -19,12 +19,14 @@
     <nav class="navbar navbar-expand-lg navbar-dark theme-red minwidth">
       <a class="navbar-brand ml-5" href="/rating/">AtypicalGamers</a>
 
+    <!-- search -->
       <div class="container justify-content-center">
-        <form class="form-inline schPosition">
-          <input class="form-control borderWhite rounded-0 searchInput" id="search_input" type="search" placeholder="Search..." aria-label="Search">
+        <form action="/rating/search/result/1" class="form-inline schPosition" method="POST">
+          <input class="form-control borderWhite rounded-0 searchInput" name="keyword" id="search_input" type="search" placeholder="Search..." aria-label="Search">
           <button class="btn borderWhite rounded-0 text-white theme-red" id="search_submit" type="submit"><i class="fas fa-search"></i></button>
           </form>
       </div>
+
 
       <button class="navbar-toggler btnPosition" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -42,16 +44,49 @@
             <a class="nav-link text-white" href="#">Comment</a>
           </li>
           <li class="nav-item ml-3">
-            <a class="nav-link text-white" href="#"><i class="fas fa-user"></i></a>
+            <button class="nav-link theme-red text-white borderRed" style="border:1px solid #ff3131" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user"></i></button>
           </li>
         </ul>
       </div>
 
     </nav>
 
+<!-- modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sign in</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">User ID:</label>
+                <input type="text" class="form-control" id="userId">
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Password:</label>
+                <input type="text" class="form-control" id="password">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="textPositionLB">
+              <p class="smallText">Don't have an account?</p>
+              <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Sign up</button>
+            </div>
+            <button type="button" class="btn btn-primary">Sign In</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 <!-- video -->
 
-    <div class="container-fluid minwidth px-0 containerShadow">
+    <div class="container-fluid minwidth containerShadow">
       <div class="row">
 
         <div class="col-8 inline-block">
@@ -65,11 +100,12 @@
               {% set i=(gameX.totalScore/gameX.ratingCount) | number_format(1, '.', ',') %}
               {% set stars=i/2 %}
               {% for star in 0..stars %}
-                {% if stars-star>=1 %}
+                {% set left = stars - star %}
+                {% if left>=1 %}
                 <i class="fas fa-star"></i> 
-                {% elseif stars-star>0.75 %}
+                {% elseif left>0.75 %}
                 <i class="fas fa-star"></i> 
-                {% elseif 0.25<=(stars-star)<=0.75 %}
+                {% elseif left>=0.25 and left<=0.75 %}
                 <i class="fas fa-star-half-alt"></i> 
                 {% endif %}
               {% endfor %}
@@ -129,15 +165,12 @@
           <div class="container-fluid">
             <div class="row text-secodary menu-underline">
 
-              <div class="col-1 mr-5 active">
+              <a class="col-1 mr-5 active" id="toGameplay" href="#toGameplay">
                 Gameplay
-              </div>
-              <div class="col-1 mr-5">
+              </a>
+              <a class="col-1 mr-5 text-dark" href="#toReview">
                 Reviews
-              </div>
-              <div class="col-1">
-                Related
-              </div>
+              </a>
 
             </div>
           </div>
@@ -145,7 +178,7 @@
 
         <div class="row my-5 px-5">
 
-          {{gameX.gameplay}}
+          {{gameX.gameplay | raw}}
 
         </div>
 
@@ -159,8 +192,8 @@
         <div class="col-12">
           <div class="container-fluid">
             <div class="row text-secodary menu-underline">
-
-              <a class="col-1 mr-5 active" href="#">
+              <div id="toReview"></div>
+              <a class="col-1 mr-5 active" href="#toReview">
                 Reviews
               </a>
 
@@ -175,7 +208,7 @@
 
           <div class="userCardWth cardPosition">
             <div class="card borderWhite">
-              <img class="iconSize centerHor" src="/rating/img/Guest-icon.png" alt="Card image cap">
+              <img class="iconSize centerHor" src="/rating/avatars/Guest.jpg" alt="Card image cap">
               <div class="lowLineHeight text-center">
                 <h5 class="text-dark">Guest</h5>
 <!--           if login    <p><i class="far fa-heart"></i> Likes <i class="far fa-envelope"></i> = 0</p> -->
@@ -187,32 +220,51 @@
           <button id="review-submit" class="btn btn-primary postBtnPosition ml-3 shadow-sm" data-id="{{gameX.idgameInfo}}">Post review</button>
         </div>
       </div>
+      <div id="result-info"> </div>
 
-      {% for review in reviews %}
-      <div class="row">
-        <div class="form-inline my-3 ml-5 col-12">
-          <div class="userCardWth cardPosition">
-            <div class="card borderWhite">
-              <img class="iconSize centerHor" src="/rating/img/Guest-icon.png" alt="Card image cap">
+      <div id="all-reviews"> 
+        {% if reviews %}
+        {% for review in reviews %}
+        <div class="row">
+          <div class="form-inline my-3 col-12 align-items-start">
+            <div class="userCardWth cardPosition col-2">
+              <div class="card borderWhite">
+                <img class="iconSize centerHor" src="/rating/avatars/{{review.userId}}.jpg" alt="Card image cap">
+              </div>
             </div>
-          </div>
-          <div class="col-8">
-            <div class="card-body">
-              <h5 class="card-title">{{review.userId}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted smallText">{{review.postTime}}</h6>
-              <p class="card-text">{{review.reviewContent}}</p>
-              <span class="text-muted smallText">Was this review helpful?</span>
-              <button type="button" class="btn btn-primary btn-sm"><i class="far fa-thumbs-up"></i></button><span class="text-muted smallText"> {{review.like}}</span>
-              <button type="button" class="btn btn-danger btn-sm"><i class="far fa-thumbs-down"></i></button><span class="text-muted smallText"> {{review.dislike}}</span>
+            <div class="col-8">
+              <div class="">
+                <h5 class="card-title">{{review.userId}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted smallText">{{review.postTime}}</h6>
+                <p class="card-text">{{review.reviewContent}}</p>
+                <span class="text-muted smallText">Was this review helpful?</span>
+                <button type="button" class="btn btn-primary btn-sm"><i class="far fa-thumbs-up"></i></button><span id="likeCounts" class="text-muted smallText"> {{review.likeCount}}</span>
+                <button type="button" class="btn btn-danger btn-sm"><i class="far fa-thumbs-down"></i></button><span id="dislikeCounts" class="text-muted smallText"> {{review.dislikeCount}}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
+        {% else %}
+        <div id="noReview">
+          <div class="alert alert-dark" role="alert">
+            No reviews yet.
+          </div>
+        </div>
+        {% endif %}
+       </div>
 
     </div>
 
-
+    <!-- footer -->
+    <div class="container-fluid minwidth theme-red footerSize">
+      <div class="row col-12 container d-flex justify-content-center">
+        <div class="col-4"></div>
+        <div class="col-4"><h3 class="my-5 text-center text-white">AtypicalGamers</h1></div>
+        <div class="col-4"></div>
+        </div>
+      </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -221,58 +273,78 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <script type="text/javascript">
-      $('#review-submit').on('click',function(){
 
+//      $('#review-like').on('click',function(){
+//        var r_id = $(this).data('id');
+//        var u_id = "Wei"; $_SESSION['ID']
+//        var content = "like";
+//        $.post(
+//          '/rating/review/submit/1',
+//          {
+//            "gid": g_id,
+//            "uid": u_id,
+//            "content": content
+//          },
+//          function(data){
+//            if(data.code==200){
+//              $('#likeCounts').html
+//            }
+//          }
+//      }
 
 
       $('#review-submit').on('click',function(){
         var g_id = $(this).data('id');
         var u_id = "Wei";
         var content = $('#review-input').val();
-        $.post(
-          '/rating/review/submit/1',
-          {
-            "gid": g_id,
-            "uid": u_id,
-            "content": content
-          },
-          function(data){
-            if (data.code==200){
-              $('#result-info').html(
-                `<div class="alert alert-primary" role="alert">\n` +
-                data.message +
-                `</div>`
-              );
-              $('#all-reviews').prepend(
-                `<div class="row">
-                  <div class="form-inline my-3 ml-5 col-12">
-                    <div class="userCardWth cardPosition">
-                      <div class="card borderWhite">
-                        <img class="iconSize centerHor" src="/rating/img/Guest-icon.png" alt="Card image cap">
-                      </div>
-                    </div>
-                    <div class="col-8">
-                      <div class="card-body">
-                        <h5 class="card-title"> Me </h5>
-                        <h6 class="card-subtitle mb-2 text-muted smallText">Just now</h6>
-                        <p class="card-text">`+ content + `</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>`
-
+        if(content!=''){
+          $.post(
+            '/rating/review/submit/1',
+            {
+              "gid": g_id,
+              "uid": u_id,
+              "content": content
+            },
+            function(data){
+              if (data.code==200){
+                $('#result-info').html(
+                  `<div class="alert alert-primary" role="alert">\n` +
+                  data.message +
+                  `</div>`
                 );
-            }else{
-              $('#result-info').html(
-                '<div class="alert alert-warning" role="alert">\n' +
-                data.message +
-                '</div>'
-              );
-              
-            }
-          },
-          "json"
-        );
+                $('#review-input').val('');//有内容=赋值，无内容=抓值
+                $('#noReview').html(``);
+                $('#all-reviews').prepend(
+                  `<div class="row">
+                    <div class="form-inline my-3 ml-5 col-12">
+                      <div class="userCardWth cardPosition">
+                        <div class="card borderWhite">
+                          <img class="iconSize centerHor" src="/rating/avatars/Guest.jpg" alt="Card image cap">
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="card-body">
+                          <h5 class="card-title"> Me </h5>
+                          <h6 class="card-subtitle mb-2 text-muted smallText">Just now</h6>
+                          <p class="card-text">`+ content + `</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>`
+
+                  );
+              }else{
+                $('#result-info').html(
+                  '<div class="alert alert-warning" role="alert">\n' +
+                  data.message +
+                  '</div>'
+                );
+                
+              }
+            },
+            "json"
+          );
+        }
       });
     </script>
 
