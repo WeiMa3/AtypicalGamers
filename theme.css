@@ -58,6 +58,10 @@ body{
     background-color:#ffffff24;
 }
 
+.fullHeight{
+    height: 100%;
+}
+
 .smallText{
 	font-size:0.8rem;
 }

@@ -18,6 +18,10 @@ class game{
 		$reviews=$this->conn->getReviewById($id);
 
 		try{
+			session_start();
+			if ($_SESSION){
+				var_dump($_SESSION['currentUserId']);
+			}
 			echo $this->twig->render(
 				'game.html.twig',
 				array(

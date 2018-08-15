@@ -24,7 +24,7 @@
         <form action="/rating/search/result/1" class="form-inline schPosition" method="POST">
           <input class="form-control borderWhite rounded-0 searchInput" name="keyword" id="search_input" type="search" placeholder="Search..." aria-label="Search">
           <button class="btn borderWhite rounded-0 text-white theme-red" id="search_submit" type="submit"><i class="fas fa-search"></i></button>
-          </form>
+        </form>
       </div>
 
 
@@ -62,23 +62,17 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form action="/rating/login/welcome/1" method="POST">
               <div class="form-group">
-                <label for="recipient-name" class="col-form-label">User ID:</label>
-                <input type="text" class="form-control" id="userId">
+                <label for="recipient-name" class="col-form-label">User Name:</label>
+                <input type="text" class="form-control" id="userId" name="userName">
               </div>
               <div class="form-group">
                 <label for="message-text" class="col-form-label">Password:</label>
-                <input type="text" class="form-control" id="password">
+                <input type="text" class="form-control" id="password" name="PW">
               </div>
+              <button class="btn theme-red text-white" id="login_submit" type="submit">Sign In</button>
             </form>
-          </div>
-          <div class="modal-footer">
-            <div class="textPositionLB">
-              <p class="smallText">Don't have an account?</p>
-              <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Sign up</button>
-            </div>
-            <button type="button" class="btn btn-primary">Sign In</button>
           </div>
         </div>
       </div>
@@ -292,6 +286,8 @@
 //          }
 //      }
 
+
+      
 
       $('#review-submit').on('click',function(){
         var g_id = $(this).data('id');
