@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/rating/theme.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <title>AtypicalGamers - Home</title>
 
@@ -32,9 +33,20 @@
 	      <li class="nav-item">
 	        <a class="nav-link text-white" href="#">Comment</a>
 	      </li>
-	      <li class="nav-item ml-3">
+
+          {% if userXInfo %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">{{userXInfo.userName}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/rating/logout">Logout</a>
+          </li>
+
+          {% else %}
             <button class="nav-link theme-red text-white borderRed" style="border:1px solid #ff3131" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user"></i></button>
-	      </li>
+
+          {% endif %}
+          
 	    </ul>
 	  </div>
 	</nav>
@@ -154,7 +166,7 @@
 	  <div class="row mx-4 px-4 minwidth">
 
 		{% for game in games %}
-			<div class="cardWth mx-4 my-4 containerShadow cardPosition">
+			<div class="cardWth mx-4 my-4 containerShadow cardPosition" data-aos="zoom-in">
 				<div class="card">
 					<a href='/rating/game/info/{{game.idgameInfo}}'>
 						<img class="card-img-top" src="{{game.cover_url}}" alt="Card image cap">
@@ -194,5 +206,11 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+ 		AOS.init({
+ 			once: true
+ 		});
+	</script>
   </body>
 </html>

@@ -34,6 +34,7 @@ if($_GET){
 	exit();
 }
 
+
 $gameData = $db_conn->getAllGames();
 $platNames = $db_conn->getPlatNames();
 
@@ -47,16 +48,29 @@ foreach ($platNames as $platName){
 
 try{
 	session_start();
+	if ($_SESSION){
+		$x = $_SESSION['currentUserId'];
+		$userXInfo = $db_conn->getUserInfo($x);
+		echo $twig->render(
+			'index.html.twig', 
+			array(
+				'games' => $gameData,
+				'platNames' => $new_platform,
+				'userXInfo' => $userXInfo
+			)
+		);
+	} else {
 	// if ($_SESSION){
 	// 	var_dump($_SESSION['currentUserId']);
 	// }
-	echo $twig->render(
-		'index.html.twig', 
-		array(
-			'games' => $gameData,
-			'platNames' => $new_platform,
-		)
-	);
+		echo $twig->render(
+			'index.html.twig', 
+			array(
+				'games' => $gameData,
+				'platNames' => $new_platform,
+			)
+		);
+	}
 }catch(Exception $e){
 	echo $e->getMessage();
 }

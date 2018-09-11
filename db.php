@@ -97,14 +97,26 @@ class dbConnection{
 		return $result;
 	}
 
-	public function reviewLikes($uid,$rid,$action){
-		$stmt = $this->getConnInstant()->prepare('INSERT INTO userLikes(userId, reviewId, likeOrNot) VALUES (:uid, :rid, :action)');
+	public function likeAdd1($uid, $rid){
+		$stmt = $this->getConnInstant()->prepare('INSERT INTO userLikes(userId, reviewId, action) VALUES (:uid, :rid, :action)');
+		$result = $stmt->execute(
+			array(
+				':uid' => $uid,
+				':rid' => $rid,
+				':action' => 'like',
+			)
+		);
+		return $result;
+	}
+
+	public function dislikeAdd1($rid, $uid){
+		$stmt = $this->getConnInstant()->prepare('INSERT INTO userLikes(userId, reviewId, action) VALUES (:uid, :rid, :action)');
 		// $stmt = $this->getConnInstant()->prepare('UPDATE review SET likeCount+=1, dislikeCount+=1 WHERE idreview=:rid');
 		$result = $stmt->execute(
 			array(
 				':uid' => $uid,
 				':rid' => $rid,
-				':action' => $action,
+				':action' => 'dislike',
 			)
 		);
 		return $result;

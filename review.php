@@ -36,6 +36,31 @@ class review {
 
 	}
 
+	public function likeMethod($default=1){
+
+		$rid = $_POST['rid'];
+		$uid = $_POST['uid'];
+
+		$result = $this->conn->likeAdd1($uid, $rid);
+
+		header("Access-Control-Allow-Origin:*");
+		header("Content-Type:application/json;charset=UTF-8");
+	
+		if($result){
+			$message = array(
+				'code' => 200,
+				'message' => 'Review posted.'
+			);
+			echo json_encode($message);
+		}else{
+			$message = array(
+				'code' => 400,
+				'message' => 'Failed. Please try again.'
+			);
+			echo json_encode($message);
+		}
+
+	}
 
 }
 

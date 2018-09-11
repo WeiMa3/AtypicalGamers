@@ -32,9 +32,20 @@
 	      <li class="nav-item">
 	        <a class="nav-link text-white" href="#">Comment</a>
 	      </li>
-	      <li class="nav-item ml-3">
+
+          {% if userXInfo %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">{{userXInfo.userName}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/rating/logout">Logout</a>
+          </li>
+
+          {% else %}
             <button class="nav-link theme-red text-white borderRed" style="border:1px solid #ff3131" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user"></i></button>
-	      </li>
+
+          {% endif %}
+          
 	    </ul>
 	  </div>
 	</nav>

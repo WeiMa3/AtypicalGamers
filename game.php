@@ -14,21 +14,33 @@ class game{
 	}
 
 	public function infoMethod($id){
-		$gameX=$this->conn->getGameById($id);
-		$reviews=$this->conn->getReviewById($id);
+		session_start();
+		if ($_SESSION){
+			$x = $_SESSION['currentUserId'];
+			$userXInfo = $this->conn->getUserInfo($x);
+		}
+		$gameX = $this->conn->getGameById($id);
+		$reviews = $this->conn->getReviewById($id);
 
 		try{
-			session_start();
 			if ($_SESSION){
-				var_dump($_SESSION['currentUserId']);
+				echo $this->twig->render(
+					'game.html.twig',
+					array(
+						'gameX' => $gameX,
+						'reviews' => $reviews,
+						'userXInfo' => $userXInfo
+					)
+				);
+			} else {
+				echo $this->twig->render(
+					'game.html.twig',
+					array(
+						'gameX' => $gameX,
+						'reviews' => $reviews
+					)
+				);
 			}
-			echo $this->twig->render(
-				'game.html.twig',
-				array(
-					'gameX'=>$gameX,
-					'reviews'=>$reviews
-				)
-			);
 		} catch (Exception $e){
 			echo $e->getMessage();
 		}

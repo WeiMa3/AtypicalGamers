@@ -44,7 +44,20 @@
             <a class="nav-link text-white" href="#">Comment</a>
           </li>
           <li class="nav-item ml-3">
+
+          {% if userXInfo %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">{{userXInfo.userName}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/rating/logout">Logout</a>
+          </li>
+
+          {% else %}
             <button class="nav-link theme-red text-white borderRed" style="border:1px solid #ff3131" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user"></i></button>
+
+          {% endif %}
+
           </li>
         </ul>
       </div>
@@ -56,7 +69,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Sign in</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Login</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -71,7 +84,7 @@
                 <label for="message-text" class="col-form-label">Password:</label>
                 <input type="text" class="form-control" id="password" name="PW">
               </div>
-              <button class="btn theme-red text-white" id="login_submit" type="submit">Sign In</button>
+              <button class="btn theme-red text-white" id="login_submit" type="submit">Login</button>
             </form>
           </div>
         </div>
@@ -202,16 +215,30 @@
 
           <div class="userCardWth cardPosition">
             <div class="card borderWhite">
-              <img class="iconSize centerHor" src="/rating/avatars/Guest.jpg" alt="Card image cap">
+
+              {% if userXInfo %}
+              <img class="iconSize centerHor" src="{{userXInfo.avatar}}" alt="Card image cap">
               <div class="lowLineHeight text-center">
-                <h5 class="text-dark">Guest</h5>
-<!--           if login    <p><i class="far fa-heart"></i> Likes <i class="far fa-envelope"></i> = 0</p> -->
-<!--                 <a class="smallText textPositionLB">Sign In</a><a class="smallText textPositionRB">Register</a> -->
+                <h5 class="text-dark">{{userXInfo.userName}}</h5>
+
+              {% endif %}
+
               </div>
             </div>
           </div>
+
+          {% if userXInfo %}
           <textarea id="review-input" class="form-control shadow-sm" style="width:550px" rows="5"></textarea>
           <button id="review-submit" class="btn btn-primary postBtnPosition ml-3 shadow-sm" data-id="{{gameX.idgameInfo}}">Post review</button>
+
+          {% else %}
+          <p>Leave your review by:</p>
+          <button class="btn btn-primary ml-3 shadow-sm" href="#" data-toggle="modal" data-target="#exampleModal">User Login</button>
+
+          {% endif %}
+
+
+
         </div>
       </div>
       <div id="result-info"> </div>
@@ -232,8 +259,8 @@
                 <h6 class="card-subtitle mb-2 text-muted smallText">{{review.postTime}}</h6>
                 <p class="card-text">{{review.reviewContent}}</p>
                 <span class="text-muted smallText">Was this review helpful?</span>
-                <button type="button" class="btn btn-primary btn-sm"><i class="far fa-thumbs-up"></i></button><span id="likeCounts" class="text-muted smallText"> {{review.likeCount}}</span>
-                <button type="button" class="btn btn-danger btn-sm"><i class="far fa-thumbs-down"></i></button><span id="dislikeCounts" class="text-muted smallText"> {{review.dislikeCount}}</span>
+                <button type="button" class="btn btn-primary btn-sm" id="review-like"><i class="far fa-thumbs-up"></i></button><span id="likeCounts" class="text-muted smallText"> {{review.likeCount}}</span>
+                <button type="button" class="btn btn-danger btn-sm" id="review-dislike"><i class="far fa-thumbs-down"></i></button><span id="dislikeCounts" class="text-muted smallText"> {{review.dislikeCount}}</span>
               </div>
             </div>
           </div>
@@ -268,30 +295,31 @@
 
     <script type="text/javascript">
 
-//      $('#review-like').on('click',function(){
-//        var r_id = $(this).data('id');
-//        var u_id = "Wei"; $_SESSION['ID']
-//        var content = "like";
-//        $.post(
-//          '/rating/review/submit/1',
-//          {
-//            "gid": g_id,
-//            "uid": u_id,
-//            "content": content
-//          },
-//          function(data){
-//            if(data.code==200){
-//              $('#likeCounts').html
-//            }
-//          }
-//      }
+/*      $('#review-like').on('click',function(){
+        var r_id = $(this).data('idreview');;
+        var u_id = "{{userXInfo.userName}}";
+        var likes = {{review.likeCount}};
+        $.post(
+          '/rating/review/like/1',
+          {
+            "rid": r_id,
+            "uid": u_id,
+          },
+          function(data){
+            if(data.code==200){
+              $('#likeCounts').html( likes + 1 );
+            } 
+          },
+          "json"
+        );
+      }); */
 
 
       
 
       $('#review-submit').on('click',function(){
         var g_id = $(this).data('id');
-        var u_id = "Wei";
+        var u_id = "{{userXInfo.userName}}";
         var content = $('#review-input').val();
         if(content!=''){
           $.post(
@@ -312,22 +340,20 @@
                 $('#noReview').html(``);
                 $('#all-reviews').prepend(
                   `<div class="row">
-                    <div class="form-inline my-3 ml-5 col-12">
-                      <div class="userCardWth cardPosition">
+                    <div class="form-inline my-3 col-12 align-items-start">
+                      <div class="userCardWth cardPosition col-2">
                         <div class="card borderWhite">
-                          <img class="iconSize centerHor" src="/rating/avatars/Guest.jpg" alt="Card image cap">
+                          <img class="iconSize centerHor" src="{{userXInfo.avatar}}" alt="Card image cap">
                         </div>
                       </div>
                       <div class="col-8">
-                        <div class="card-body">
-                          <h5 class="card-title"> Me </h5>
-                          <h6 class="card-subtitle mb-2 text-muted smallText">Just now</h6>
-                          <p class="card-text">`+ content + `</p>
+                        <div class="">
+                          <h5 class="card-title">{{userXInfo.userName}}</h5>
+                          <p class="card-text">` + content + `</p>
                         </div>
                       </div>
                     </div>
                   </div>`
-
                   );
               }else{
                 $('#result-info').html(

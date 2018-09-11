@@ -40,18 +40,4 @@ class login{
 }
 
 
-
-// Check Post -> name  -> password
-
-
-// Check Database -> signin
- // $result = ["idUser" => 1];
-
-
- // session_start();
-
-
- // $_SESSION['currentLoginUserId'] = $result['idUser'];
-
-
 ?>
